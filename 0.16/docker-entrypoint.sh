@@ -11,14 +11,24 @@ mkdir -p $SAVES
 mkdir -p /factorio/mods
 mkdir -p $CONFIG
 
-#chown -R factorio /factorio
-
 if [ ! -f $CONFIG/rconpw ]; then
   echo $(pwgen 15 1) > $CONFIG/rconpw
 fi
 
 if [ ! -f $CONFIG/server-settings.json ]; then
   cp /opt/factorio/data/server-settings.example.json $CONFIG/server-settings.json
+fi
+
+if [ ! -z "$SERVER_SETTINGS_URL" ]; then
+  curl -sSL $SERVER_SETTINGS_URL \
+  -o $CONFIG/server-settings.json
+fi
+
+if [ ! -z "$SAVE_FILE_URL" ]; then
+  if [ ! -f $SAVES/_autosave1.zip ]; then 
+    curl -sSL $SAVE_FILE_URL \
+    -o $SAVES/_autosave1.zip
+  fi 
 fi
 
 if [ ! -f $CONFIG/map-gen-settings.json ]; then
